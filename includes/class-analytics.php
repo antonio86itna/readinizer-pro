@@ -20,11 +20,12 @@ class ReadinizerPro_Analytics {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
-		add_action( 'wp_ajax_readinizer_pro_track_engagement', array( $this, 'track_engagement' ) );
-		add_action( 'wp_ajax_nopriv_readinizer_pro_track_engagement', array( $this, 'track_engagement' ) );
-		add_action( 'wp_ajax_readinizer_pro_export_analytics', array( $this, 'export_analytics' ) );
-	}
+        public function __construct() {
+                add_action( 'wp_ajax_readinizer_pro_track_engagement', array( $this, 'track_engagement' ) );
+                add_action( 'wp_ajax_nopriv_readinizer_pro_track_engagement', array( $this, 'track_engagement' ) );
+                add_action( 'wp_ajax_readinizer_pro_export_analytics', array( $this, 'export_analytics' ) );
+                add_action( 'wp_ajax_readinizer_pro_get_monthly_analytics', array( $this, 'get_monthly_analytics' ) );
+        }
 
 	/**
 	 * Create analytics tables
@@ -205,8 +206,51 @@ class ReadinizerPro_Analytics {
 			);
 		}
 
-		wp_send_json_success( 'Engagement tracked' );
-	}
+               wp_send_json_success( 'Engagement tracked' );
+       }
+
+       /**
+        * Get monthly analytics totals.
+        *
+        * @return void
+        */
+       public function get_monthly_analytics() {
+               check_ajax_referer( 'readinizer_pro_analytics', 'nonce' );
+
+               if ( ! current_user_can( 'manage_options' ) ) {
+                       wp_send_json_error( 'Insufficient permissions' );
+               }
+
+               global $wpdb;
+
+               $table_name = $wpdb->prefix . 'readinizer_analytics';
+
+               // Get last 6 months of data.
+               $results = $wpdb->get_results(
+                       "SELECT DATE_FORMAT(created_at, '%b') AS month,
+                               COUNT(DISTINCT session_id, post_id) AS views,
+                               AVG(progress) AS engagement
+                        FROM $table_name
+                        WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+                        GROUP BY YEAR(created_at), MONTH(created_at)
+                        ORDER BY YEAR(created_at), MONTH(created_at)",
+                       ARRAY_A
+               );
+
+               $data = array();
+
+               if ( $results ) {
+                       foreach ( $results as $row ) {
+                               $data[] = array(
+                                       'month'      => $row['month'],
+                                       'views'      => (int) $row['views'],
+                                       'engagement' => round( (float) $row['engagement'], 2 ),
+                               );
+                       }
+               }
+
+               wp_send_json_success( $data );
+       }
 
 	/**
 	 * Render analytics dashboard

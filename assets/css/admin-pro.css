@@ -1,9 +1,5 @@
 /* Readinizer Pro Admin Styles */
 
-.readinizer-pro-admin .wrap {
-    max-width: 1400px;
-}
-
 .readinizer-pro-header {
     display: flex;
     justify-content: space-between;

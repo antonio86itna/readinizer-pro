@@ -20,8 +20,11 @@
         // Form handlers
         setupFormHandlers();
 
-        // Preview updates
+        // Preview updates - FIXED
         setupPreviewUpdates();
+
+        // Templates functionality - FIXED
+        setupTemplateBuilder();
 
         // Analytics initialization
         if (typeof Chart !== 'undefined') {
@@ -70,11 +73,23 @@
         const hash = window.location.hash.substring(1);
         if (hash && $('.nav-tab[data-tab="' + hash + '"]').length) {
             $('.nav-tab[data-tab="' + hash + '"]').click();
+        } else {
+            // Default to first tab
+            $('.nav-tab').first().click();
         }
     }
 
     function initTabContent(tab) {
         switch(tab) {
+            case 'general':
+                updatePreview();
+                break;
+            case 'display':
+                updatePreview();
+                break;
+            case 'style':
+                updatePreview();
+                break;
             case 'analytics':
                 if (typeof Chart !== 'undefined') {
                     setTimeout(initializeAnalytics, 100);
@@ -90,6 +105,14 @@
     }
 
     function setupFormHandlers() {
+        // Handle all form submissions with AJAX-like preview updates
+        $(document).on('change', 'input, select, textarea', function() {
+            const $form = $(this).closest('form');
+            if ($form.length && $form.find('#readinizer-preview').length) {
+                updatePreview();
+            }
+        });
+
         // Form validation
         $('form').on('submit', function(e) {
             const errors = validateForm($(this));
@@ -103,20 +126,33 @@
     }
 
     function setupPreviewUpdates() {
-        // Update preview on form changes
-        $('input, select').on('change', updatePreview);
-        $('input[type="text"], input[type="number"]').on('keyup', debounce(updatePreview, 500));
+        // Update preview on any form change
+        $(document).on('change keyup', '#tab-general input, #tab-general select, #tab-display input, #tab-display select, #tab-style input, #tab-style select', debounce(updatePreview, 300));
+
+        // Color picker specific handling
+        $(document).on('change', '.wp-color-picker', updatePreview);
+
+        // Range input display
+        $(document).on('input', 'input[type="range"]', function() {
+            const $next = $(this).next('.range-value');
+            if ($next.length) {
+                $next.text($(this).val() + 'px');
+            }
+            updatePreview();
+        });
 
         // Initial preview update
-        updatePreview();
+        setTimeout(updatePreview, 500);
     }
 
+    // COMPLETELY FIXED updatePreview function
     function updatePreview() {
+        const enabled = $('#enabled').is(':checked');
         const showReadingTime = $('#show_reading_time').is(':checked');
         const showWordCount = $('#show_word_count').is(':checked');
         const showWpezoCredit = $('#show_wpezo_credit').is(':checked');
         const customText = $('#custom_text').val() || 'Reading time: {time} • {words} words';
-        const displayStyle = $('input[name="readinizer_pro_options[display_style]"]:checked').val();
+        const displayStyle = $('input[name="readinizer_pro_options[display_style]"]:checked').val() || 'modern';
         const textColor = $('#text_color').val() || '#666666';
         const backgroundColor = $('#background_color').val() || '#f8f9fa';
         const borderRadius = $('#border_radius').val() || '6';
@@ -144,7 +180,7 @@
         // Build inline styles for custom style
         let inlineStyles = '';
         if (displayStyle === 'custom') {
-            inlineStyles = 'style="color: ' + textColor + '; background-color: ' + backgroundColor + '; border-radius: ' + borderRadius + 'px; font-size: ' + fontSize + 'px;"';
+            inlineStyles = `color: ${textColor}; background-color: ${backgroundColor}; border-radius: ${borderRadius}px; font-size: ${fontSize}px; padding: 8px 14px; border: 1px solid rgba(0,0,0,0.1); font-weight: 500; display: inline-flex; align-items: center; gap: 8px;`;
         }
 
         // Add WPezo credit if enabled
@@ -153,9 +189,222 @@
             wpezoCredit = ' <span class="readinizer-credit">by <a href="https://www.wpezo.com" target="_blank">WPezo</a></span>';
         }
 
-        // Update preview
-        const previewHTML = '<div class="' + cssClass + '" ' + inlineStyles + '>📖 ' + displayText + wpezoCredit + '</div>';
-        $('#readinizer-preview').html(previewHTML);
+        // Build final HTML
+        const iconHtml = enabled ? '📖 ' : '';
+        const previewHTML = `<div class="${cssClass}" style="${inlineStyles}">${iconHtml}${displayText}${wpezoCredit}</div>`;
+
+        // Update all preview containers
+        $('#readinizer-preview, .preview-box').html(previewHTML);
+    }
+
+    function setupTemplateBuilder() {
+        // Tab switching for template builder
+        $('.tab-button').off('click').on('click', function() {
+            const tab = $(this).data('tab');
+            $('.tab-button').removeClass('active');
+            $('.tab-content').removeClass('active');
+            $(this).addClass('active');
+            $('#' + tab + '-tab').addClass('active');
+        });
+
+        // Live preview update for templates
+        $('#template-html, #template-css').off('input').on('input', debounce(updateTemplatePreview, 300));
+
+        // Template actions
+        setupTemplateActions();
+
+        // Load template for editing
+        $('.edit-template').off('click').on('click', function() {
+            const templateId = $(this).data('template');
+            loadTemplateForEditing(templateId);
+        });
+
+        // Reset builder
+        $('#reset-builder').off('click').on('click', function() {
+            $('#template-name').val('');
+            $('#template-description').val('');
+            $('#template-html').val('');
+            $('#template-css').val('');
+            $('#template-preview').html('<p>Template preview will appear here as you build it.</p>');
+        });
+    }
+
+    function updateTemplatePreview() {
+        const html = $('#template-html').val();
+        const css = $('#template-css').val();
+
+        if (!html) {
+            $('#template-preview').html('<p>Enter HTML template to see preview.</p>');
+            return;
+        }
+
+        let previewHtml = html.replace(/{icon}/g, '📖')
+                             .replace(/{text}/g, 'Reading time: 3 minutes • 650 words')
+                             .replace(/{time}/g, '3 minutes')
+                             .replace(/{words}/g, '650 words')
+                             .replace(/{title}/g, 'Reading Info');
+
+        const fullPreview = '<style>' + css + '</style>' + previewHtml;
+        $('#template-preview').html(fullPreview);
+    }
+
+    function loadTemplateForEditing(templateId) {
+        // This would typically load template data via AJAX
+        // For now, we'll focus on the UI functionality
+        console.log('Loading template for editing:', templateId);
+    }
+
+    function setupTemplateActions() {
+        // Save template
+        $('#save-template').off('click').on('click', function() {
+            const name = $('#template-name').val().trim();
+            const description = $('#template-description').val().trim();
+            const html = $('#template-html').val().trim();
+            const css = $('#template-css').val().trim();
+
+            if (!name || !html) {
+                showNotification('Please fill in template name and HTML structure.', 'error');
+                return;
+            }
+
+            // Show loading state
+            $(this).prop('disabled', true).text('Saving...');
+
+            $.post(ajaxurl, {
+                action: 'readinizer_pro_save_template',
+                nonce: readinizerProAdmin.nonces.template,
+                name: name,
+                description: description,
+                html: html,
+                css: css
+            }, function(response) {
+                if (response.success) {
+                    showNotification(response.data.message || 'Template saved successfully!', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification(response.data || 'An error occurred while saving.', 'error');
+                }
+            }).fail(function() {
+                showNotification('Network error occurred. Please try again.', 'error');
+            }).always(function() {
+                $('#save-template').prop('disabled', false).text('Save Template');
+            });
+        });
+
+        // Delete template
+        $(document).on('click', '.delete-template', function() {
+            if (!confirm(readinizerProAdmin.strings.confirm_delete || 'Are you sure you want to delete this template?')) {
+                return;
+            }
+
+            const $button = $(this);
+            const templateId = $button.data('template');
+
+            $button.prop('disabled', true).text('Deleting...');
+
+            $.post(ajaxurl, {
+                action: 'readinizer_pro_delete_template',
+                nonce: readinizerProAdmin.nonces.template,
+                template_id: templateId
+            }, function(response) {
+                if (response.success) {
+                    showNotification('Template deleted successfully!', 'success');
+                    $button.closest('.template-card').fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                } else {
+                    showNotification(response.data || 'Error deleting template.', 'error');
+                    $button.prop('disabled', false).text('Delete');
+                }
+            });
+        });
+
+        // Use template
+        $(document).on('click', '.use-template', function() {
+            const $button = $(this);
+            const templateId = $button.data('template');
+
+            $button.prop('disabled', true).text('Applying...');
+
+            $.post(ajaxurl, {
+                action: 'readinizer_pro_use_template',
+                nonce: readinizerProAdmin.nonces.template,
+                template_id: templateId
+            }, function(response) {
+                if (response.success) {
+                    showNotification('Template applied successfully!', 'success');
+                    // Update the style selection if we're on the style tab
+                    $(`input[name="readinizer_pro_options[display_style]"][value="${templateId}"]`).prop('checked', true);
+                    updatePreview();
+                } else {
+                    showNotification(response.data || 'Error applying template.', 'error');
+                }
+            }).always(function() {
+                $button.prop('disabled', false).text('Use');
+            });
+        });
+
+        // Save assignment
+        $(document).on('click', '.save-assignment', function() {
+            const $button = $(this);
+            const postType = $button.data('post-type');
+            const template = $button.closest('tr').find('select').val();
+
+            $button.prop('disabled', true).text('Saving...');
+
+            $.post(ajaxurl, {
+                action: 'readinizer_pro_save_assignment',
+                nonce: readinizerProAdmin.nonces.template,
+                post_type: postType,
+                template: template
+            }, function(response) {
+                if (response.success) {
+                    showNotification('Assignment saved!', 'success');
+                } else {
+                    showNotification(response.data || 'Error saving assignment.', 'error');
+                }
+            }).always(function() {
+                $button.prop('disabled', false).text('Save');
+            });
+        });
+    }
+
+    function initProgressBarPreview() {
+        // This function will be called when the progress tab is opened
+        updateProgressPreview();
+
+        // Update demo when settings change
+        $(document).on('change', '#tab-progress input, #tab-progress select', updateProgressPreview);
+
+        // Range input display
+        $(document).on('input', '#tab-progress input[type="range"]', function() {
+            $(this).next('.range-value').text($(this).val() + 'px');
+            updateProgressPreview();
+        });
+    }
+
+    function updateProgressPreview() {
+        const style = $('input[name="readinizer_pro_options[progress_bar_style]"]:checked').val() || 'linear';
+        const position = $('#progress_position').val() || 'top';
+        const color = $('#progress_color').val() || '#0073aa';
+        const thickness = $('#progress_thickness').val() || '4';
+        const showPercentage = $('#show_percentage').is(':checked');
+
+        let previewHtml = '';
+
+        switch(style) {
+            case 'linear':
+                previewHtml = `<div class="demo-progress-linear" style="background: rgba(0,0,0,0.1); height: ${thickness}px; position: relative; border-radius: 2px; margin: 10px 0; width: 100%;"><div class="demo-progress-fill" style="width: 65%; height: 100%; background: ${color}; border-radius: 2px; transition: width 0.3s ease;"></div></div>`;
+                break;
+            case 'circular':
+                previewHtml = `<div class="demo-progress-circular" style="width: 60px; height: 60px; border: 3px solid rgba(0,0,0,0.1); border-top-color: ${color}; border-radius: 50%; position: relative; margin: 10px auto;"><span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: bold; color: ${color};">${showPercentage ? '65%' : ''}</span></div>`;
+                break;
+            case 'floating':
+                previewHtml = `<div class="demo-progress-floating" style="background: ${color}; color: white; padding: 8px 12px; border-radius: 20px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 10px;">📖 <span>${showPercentage ? '65%' : 'Reading...'}</span></div>`;
+                break;
+        }
+
+        $('#demo-progress-bar, #preview-progress-bar').html(previewHtml);
     }
 
     function initializeAnalytics() {
@@ -249,181 +498,6 @@
         animateNumbers();
     }
 
-    function initTemplateBuilder() {
-        // Tab switching for template builder
-        $('.tab-button').off('click').on('click', function() {
-            const tab = $(this).data('tab');
-            $('.tab-button').removeClass('active');
-            $('.tab-content').removeClass('active');
-            $(this).addClass('active');
-            $('#' + tab + '-tab').addClass('active');
-        });
-
-        // Live preview update for templates
-        $('#template-html, #template-css').off('input').on('input', debounce(updateTemplatePreview, 300));
-
-        // Template actions
-        setupTemplateActions();
-    }
-
-    function updateTemplatePreview() {
-        const html = $('#template-html').val();
-        const css = $('#template-css').val();
-
-        let previewHtml = html.replace(/{icon}/g, '📖')
-                             .replace(/{text}/g, 'Reading time: 3 minutes • 650 words')
-                             .replace(/{time}/g, '3 minutes')
-                             .replace(/{words}/g, '650 words')
-                             .replace(/{title}/g, 'Reading Info');
-
-        $('#template-preview').html('<style>' + css + '</style>' + previewHtml);
-    }
-
-    function setupTemplateActions() {
-        // Save template
-        $('#save-template').off('click').on('click', function() {
-            const name = $('#template-name').val();
-            const description = $('#template-description').val();
-            const html = $('#template-html').val();
-            const css = $('#template-css').val();
-
-            if (!name || !html) {
-                showNotification('Please fill in template name and HTML structure.', 'error');
-                return;
-            }
-
-            $.post(ajaxurl, {
-                action: 'readinizer_pro_save_template',
-                nonce: readinizerProAdmin.nonces.template,
-                name: name,
-                description: description,
-                html: html,
-                css: css
-            }, function(response) {
-                if (response.success) {
-                    showNotification(readinizerProAdmin.strings.template_saved, 'success');
-                    setTimeout(() => location.reload(), 1000);
-                } else {
-                    showNotification(readinizerProAdmin.strings.error_occurred, 'error');
-                }
-            });
-        });
-
-        // Delete template
-        $('.delete-template').off('click').on('click', function() {
-            if (!confirm(readinizerProAdmin.strings.confirm_delete)) {
-                return;
-            }
-
-            const templateId = $(this).data('template');
-
-            $.post(ajaxurl, {
-                action: 'readinizer_pro_delete_template',
-                nonce: readinizerProAdmin.nonces.template,
-                template_id: templateId
-            }, function(response) {
-                if (response.success) {
-                    showNotification('Template deleted successfully!', 'success');
-                    setTimeout(() => location.reload(), 1000);
-                } else {
-                    showNotification(readinizerProAdmin.strings.error_occurred, 'error');
-                }
-            });
-        });
-
-        // Save assignment
-        $('.save-assignment').off('click').on('click', function() {
-            const postType = $(this).data('post-type');
-            const template = $('select[name="template_assignment[' + postType + ']"]').val();
-
-            $.post(ajaxurl, {
-                action: 'readinizer_pro_save_assignment',
-                nonce: readinizerProAdmin.nonces.template,
-                post_type: postType,
-                template: template
-            }, function(response) {
-                if (response.success) {
-                    showNotification('Assignment saved!', 'success');
-                } else {
-                    showNotification(readinizerProAdmin.strings.error_occurred, 'error');
-                }
-            });
-        });
-    }
-
-    function initProgressBarPreview() {
-        // Update preview when settings change
-        $('input, select').off('change.progress').on('change.progress', updateProgressPreview);
-
-        // Range input display
-        $('.range-input').off('input').on('input', function() {
-            $(this).next('.range-value').text($(this).val() + 'px');
-            updateProgressPreview();
-        });
-
-        // Initial preview
-        updateProgressPreview();
-
-        // Save progress settings
-        $('#save-progress-settings').off('click').on('click', function(e) {
-            e.preventDefault();
-
-            const formData = $('.progress-form').serialize();
-
-            $.post(ajaxurl, {
-                action: 'readinizer_pro_save_progress_settings',
-                nonce: readinizerProAdmin.nonces.progress,
-                settings: formData
-            }, function(response) {
-                if (response.success) {
-                    showNotification(readinizerProAdmin.strings.settings_saved, 'success');
-                } else {
-                    showNotification(readinizerProAdmin.strings.error_occurred, 'error');
-                }
-            });
-        });
-
-        // Reset settings
-        $('#reset-progress-settings').off('click').on('click', function() {
-            if (confirm('Are you sure you want to reset all progress bar settings to defaults?')) {
-                // Reset form to defaults
-                $('#enable_progress_bars').prop('checked', true);
-                $('input[name="progress_style"][value="linear"]').prop('checked', true);
-                $('#progress_position').val('top');
-                $('#progress_color').val('#0073aa');
-                $('#progress_thickness').val('4');
-                $('#progress_animation').val('smooth');
-                $('#show_percentage').prop('checked', true);
-
-                updateProgressPreview();
-            }
-        });
-    }
-
-    function updateProgressPreview() {
-        const style = $('input[name="progress_style"]:checked').val();
-        const position = $('#progress_position').val();
-        const color = $('#progress_color').val();
-        const thickness = $('#progress_thickness').val();
-        const showPercentage = $('#show_percentage').is(':checked');
-
-        let previewHtml = '';
-
-        switch(style) {
-            case 'linear':
-                previewHtml = `<div class="progress-linear progress-${position}" style="background: rgba(0,0,0,0.1); height: ${thickness}px; position: relative; border-radius: 2px; margin: 10px 0;"><div class="progress-fill" style="width: 45%; height: 100%; background: ${color}; border-radius: 2px; transition: width 0.3s ease;"></div></div>`;
-                break;
-            case 'circular':
-                previewHtml = `<div class="progress-circular" style="width: 60px; height: 60px; border: 3px solid rgba(0,0,0,0.1); border-top-color: ${color}; border-radius: 50%; position: relative; animation: spin 2s linear infinite; margin: 10px auto;"><span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: bold; color: ${color};">${showPercentage ? '45%' : ''}</span></div>`;
-                break;
-            case 'floating':
-                previewHtml = `<div class="progress-floating" style="background: ${color}; color: white; padding: 8px 12px; border-radius: 20px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin: 10px;">📖 <span>${showPercentage ? '45%' : 'Reading...'}</span></div>`;
-                break;
-        }
-
-        $('#preview-progress-bar').html(previewHtml);
-    }
-
     function animateNumbers() {
         $('.analytics-card .card-content h3').each(function() {
             const $this = $(this);
@@ -457,7 +531,7 @@
         // Check required fields
         $form.find('[required]').each(function() {
             if (!$(this).val()) {
-                errors.push('Field "' + $(this).attr('name') + '" is required.');
+                errors.push(`Field "${$(this).attr('name')}" is required.`);
             }
         });
 
@@ -468,10 +542,10 @@
             const max = parseInt($(this).attr('max'));
 
             if (min && val < min) {
-                errors.push('Value must be at least ' + min);
+                errors.push(`Value must be at least ${min}`);
             }
             if (max && val > max) {
-                errors.push('Value must be no more than ' + max);
+                errors.push(`Value must be no more than ${max}`);
             }
         });
 
@@ -479,8 +553,11 @@
     }
 
     function showNotification(message, type = 'info') {
+        // Remove existing notifications
+        $('.readinizer-notification').remove();
+
         const $notification = $(`
-            <div class="notice notice-${type} is-dismissible" style="margin: 10px 0;">
+            <div class="notice notice-${type} is-dismissible readinizer-notification" style="margin: 10px 0;">
                 <p>${message}</p>
                 <button type="button" class="notice-dismiss">
                     <span class="screen-reader-text">Dismiss this notice.</span>
@@ -512,15 +589,5 @@
             timeout = setTimeout(later, wait);
         };
     }
-
-    // Add CSS for spinning animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(style);
 
 })(jQuery);

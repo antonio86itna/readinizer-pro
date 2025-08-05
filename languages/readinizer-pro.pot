@@ -3,9 +3,9 @@
 # This file is distributed under the same license as Readinizer Pro.
 msgid ""
 msgstr ""
-"Project-Id-Version: Readinizer Pro 2.0.0\n"
+"Project-Id-Version: Readinizer Pro 2.0.1\n"
 "Report-Msgid-Bugs-To: support@wpezo.com\n"
-"POT-Creation-Date: 2025-08-05 11:00+0000\n"
+"POT-Creation-Date: 2025-08-05 12:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: WPezo <hello@wpezo.com>\n"
@@ -75,25 +75,4 @@ msgid "Templates"
 msgstr ""
 
 msgid "Progress Bars"
-msgstr ""
-
-msgid "WPezo Plugins"
-msgstr ""
-
-msgid "Discover more professional WordPress plugins and themes by WPezo."
-msgstr ""
-
-msgid "Explore WPezo Products"
-msgstr ""
-
-msgid "How to Use"
-msgstr ""
-
-msgid "Enable automatic display in General Settings"
-msgstr ""
-
-msgid "Choose post types to display on"
-msgstr ""
-
-msgid "Use shortcodes for manual placement:"
 msgstr ""

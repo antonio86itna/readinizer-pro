@@ -1,0 +1,99 @@
+# Readinizer Pro Translation Template
+# Copyright (C) 2025 WPezo
+# This file is distributed under the same license as Readinizer Pro.
+msgid ""
+msgstr ""
+"Project-Id-Version: Readinizer Pro 2.0.0\n"
+"Report-Msgid-Bugs-To: support@wpezo.com\n"
+"POT-Creation-Date: 2025-08-05 11:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: WPezo <hello@wpezo.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Reading time: {time} • {words} words"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "More WPezo Plugins"
+msgstr ""
+
+msgid "Support"
+msgstr ""
+
+msgid "Documentation"
+msgstr ""
+
+msgid "WPezo Plugins"
+msgstr ""
+
+msgid "Readinizer Pro Settings"
+msgstr ""
+
+msgid "Readinizer Pro"
+msgstr ""
+
+msgid "1 minute"
+msgstr ""
+
+msgid "%d minutes"
+msgstr ""
+
+msgid "1 word"
+msgstr ""
+
+msgid "%d words"
+msgstr ""
+
+msgid "Professional Reading Time & Analytics for WordPress"
+msgstr ""
+
+msgid "Powered by %s"
+msgstr ""
+
+msgid "Version %s"
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Display"
+msgstr ""
+
+msgid "Style"
+msgstr ""
+
+msgid "Analytics"
+msgstr ""
+
+msgid "Templates"
+msgstr ""
+
+msgid "Progress Bars"
+msgstr ""
+
+msgid "WPezo Plugins"
+msgstr ""
+
+msgid "Discover more professional WordPress plugins and themes by WPezo."
+msgstr ""
+
+msgid "Explore WPezo Products"
+msgstr ""
+
+msgid "How to Use"
+msgstr ""
+
+msgid "Enable automatic display in General Settings"
+msgstr ""
+
+msgid "Choose post types to display on"
+msgstr ""
+
+msgid "Use shortcodes for manual placement:"
+msgstr ""

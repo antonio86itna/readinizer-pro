@@ -81,15 +81,6 @@
 
     function initTabContent(tab) {
         switch(tab) {
-            case 'general':
-                updatePreview();
-                break;
-            case 'display':
-                updatePreview();
-                break;
-            case 'style':
-                updatePreview();
-                break;
             case 'analytics':
                 if (typeof Chart !== 'undefined') {
                     setTimeout(initializeAnalytics, 100);
@@ -102,17 +93,11 @@
                 initProgressBarPreview();
                 break;
         }
+
+        updatePreview();
     }
 
     function setupFormHandlers() {
-        // Handle all form submissions with AJAX-like preview updates
-        $(document).on('change', 'input, select, textarea', function() {
-            const $form = $(this).closest('form');
-            if ($form.length && $form.find('#readinizer-preview').length) {
-                updatePreview();
-            }
-        });
-
         // Form validation
         $('form').on('submit', function(e) {
             const errors = validateForm($(this));
@@ -127,7 +112,7 @@
 
     function setupPreviewUpdates() {
         // Update preview on any form change
-        $(document).on('change keyup', '#tab-general input, #tab-general select, #tab-display input, #tab-display select, #tab-style input, #tab-style select', debounce(updatePreview, 300));
+        $(document).on('change keyup', '.tab-content input, .tab-content select, .tab-content textarea', debounce(updatePreview, 300));
 
         // Color picker specific handling
         $(document).on('change', '.wp-color-picker', updatePreview);

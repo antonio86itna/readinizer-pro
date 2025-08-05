@@ -839,21 +839,7 @@ class ReadinizerPro {
 								</tr>
 							</table>
 
-							<!-- Live Preview Section -->
-							<div class="preview-section">
-								<h3><?php esc_html_e( 'Live Preview', 'readinizer-pro' ); ?></h3>
-								<div id="readinizer-preview" class="preview-box">
-									<?php
-									$sample_stats = array(
-										'reading_time' => 3,
-										'word_count'   => 650,
-									);
-									echo $this->generate_reading_time_html( $sample_stats ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-									?>
-								</div>
-							</div>
-
-							<?php submit_button( __( 'Save Settings', 'readinizer-pro' ) ); ?>
+        <?php submit_button( __( 'Save Settings', 'readinizer-pro' ) ); ?>
 						</form>
 					</div>
 
@@ -1025,7 +1011,21 @@ class ReadinizerPro {
 						</a>
 					</div>
 
-					<div class="readinizer-pro-box">
+                                        <!-- Live Preview Section -->
+                                        <div class="preview-section">
+                                                <h3><?php esc_html_e( 'Live Preview', 'readinizer-pro' ); ?></h3>
+                                                <div id="readinizer-preview" class="preview-box">
+                                                        <?php
+                                                        $sample_stats = array(
+                                                                'reading_time' => 3,
+                                                                'word_count'   => 650,
+                                                        );
+                                                        echo $this->generate_reading_time_html( $sample_stats ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                                        ?>
+                                                </div>
+                                        </div>
+
+                                        <div class="readinizer-pro-box">
 						<h3>📖 <?php esc_html_e( 'How to Use', 'readinizer-pro' ); ?></h3>
 						<ul>
 							<li><?php esc_html_e( 'Enable automatic display in General Settings', 'readinizer-pro' ); ?></li>

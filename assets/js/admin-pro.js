@@ -234,9 +234,28 @@
     }
 
     function loadTemplateForEditing(templateId) {
-        // This would typically load template data via AJAX
-        // For now, we'll focus on the UI functionality
-        console.log('Loading template for editing:', templateId);
+        $('#save-template').prop('disabled', true).text('Loading...');
+
+        $.post(ajaxurl, {
+            action: 'readinizer_pro_get_template',
+            nonce: readinizerProAdmin.nonces.template,
+            template_id: templateId
+        }, function(response) {
+            if (response.success && response.data) {
+                const tmpl = response.data;
+                $('#template-name').val(tmpl.name || '');
+                $('#template-description').val(tmpl.description || '');
+                $('#template-html').val(tmpl.html || '');
+                $('#template-css').val(tmpl.css || '');
+                updateTemplatePreview();
+            } else {
+                showNotification(response.data || 'Error loading template.', 'error');
+            }
+        }).fail(function() {
+            showNotification('Network error occurred. Please try again.', 'error');
+        }).always(function() {
+            $('#save-template').prop('disabled', false).text('Save Template');
+        });
     }
 
     function setupTemplateActions() {

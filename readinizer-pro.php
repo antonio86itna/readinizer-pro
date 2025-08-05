@@ -116,34 +116,41 @@ class ReadinizerPro {
 	 *
 	 * @return void
 	 */
-	private function init_hooks() {
-		add_action( 'init', array( $this, 'load_textdomain' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
-		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_filter( 'the_content', array( $this, 'add_reading_time_to_content' ) );
-		add_shortcode( 'readinizer_pro', array( $this, 'readinizer_shortcode' ) );
-		add_shortcode( 'readinizer', array( $this, 'readinizer_shortcode' ) ); // Backward compatibility.
-		add_shortcode( 'reading_time', array( $this, 'reading_time_shortcode' ) );
-		add_shortcode( 'word_count', array( $this, 'word_count_shortcode' ) );
-		add_shortcode( 'reading_progress', array( $this, 'reading_progress_shortcode' ) );
+        private function init_hooks() {
+                add_action( 'init', array( $this, 'load_textdomain' ) );
+                add_action( 'init', array( $this, 'register_plugin_links' ), 20 );
+                add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+                add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+                add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+                add_action( 'admin_init', array( $this, 'admin_init' ) );
+                add_filter( 'the_content', array( $this, 'add_reading_time_to_content' ) );
+                add_shortcode( 'readinizer_pro', array( $this, 'readinizer_shortcode' ) );
+                add_shortcode( 'readinizer', array( $this, 'readinizer_shortcode' ) ); // Backward compatibility.
+                add_shortcode( 'reading_time', array( $this, 'reading_time_shortcode' ) );
+                add_shortcode( 'word_count', array( $this, 'word_count_shortcode' ) );
+                add_shortcode( 'reading_progress', array( $this, 'reading_progress_shortcode' ) );
 
-		// Plugin activation/deactivation.
-		register_activation_hook( __FILE__, array( $this, 'activate' ) );
-		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+                // Plugin activation/deactivation.
+                register_activation_hook( __FILE__, array( $this, 'activate' ) );
+                register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
-		// Plugin action links (NO PRO UPGRADE LINKS).
-		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_action_links' ) );
-		add_filter( 'plugin_row_meta', array( $this, 'add_row_meta' ), 10, 2 );
+                // AJAX handlers.
+                add_action( 'wp_ajax_readinizer_pro_update_options', array( $this, 'ajax_update_options' ) );
+                add_action( 'wp_ajax_readinizer_pro_get_preview', array( $this, 'ajax_get_preview' ) );
 
-		// AJAX handlers.
-		add_action( 'wp_ajax_readinizer_pro_update_options', array( $this, 'ajax_update_options' ) );
-		add_action( 'wp_ajax_readinizer_pro_get_preview', array( $this, 'ajax_get_preview' ) );
+                // Cache compatibility.
+                add_action( 'wp_footer', array( $this, 'add_cache_busting_meta' ) );
+        }
 
-		// Cache compatibility.
-		add_action( 'wp_footer', array( $this, 'add_cache_busting_meta' ) );
-	}
+        /**
+         * Register plugin links after textdomain is loaded.
+         *
+         * @return void
+         */
+        public function register_plugin_links() {
+                add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_action_links' ) );
+                add_filter( 'plugin_row_meta', array( $this, 'add_row_meta' ), 10, 2 );
+        }
 
 	/**
 	 * Initialize plugin options
@@ -159,9 +166,9 @@ class ReadinizerPro {
 				'post_types'                     => array( 'post' ),
 				'words_per_minute'               => 200,
 				'show_word_count'                => true,
-				'show_reading_time'              => true,
-				'custom_text'                    => __( 'Reading time: {time} • {words} words', 'readinizer-pro' ),
-				'display_style'                  => 'modern',
+                                'show_reading_time'              => true,
+                                'custom_text'                    => 'Reading time: {time} • {words} words',
+                                'display_style'                  => 'modern',
 				'text_color'                     => '#666666',
 				'background_color'               => '#f8f9fa',
 				'border_radius'                  => '6',

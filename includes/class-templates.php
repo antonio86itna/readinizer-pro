@@ -23,10 +23,11 @@ class ReadinizerPro_Templates {
 	public function __construct() {
 		add_action( 'wp_ajax_readinizer_pro_save_template', array( $this, 'ajax_save_template' ) );
 		add_action( 'wp_ajax_readinizer_pro_delete_template', array( $this, 'ajax_delete_template' ) );
-		add_action( 'wp_ajax_readinizer_pro_preview_template', array( $this, 'ajax_preview_template' ) );
-		add_action( 'wp_ajax_readinizer_pro_save_assignment', array( $this, 'ajax_save_assignment' ) );
-		add_action( 'wp_ajax_readinizer_pro_use_template', array( $this, 'ajax_use_template' ) );
-	}
+                add_action( 'wp_ajax_readinizer_pro_preview_template', array( $this, 'ajax_preview_template' ) );
+                add_action( 'wp_ajax_readinizer_pro_get_template', array( $this, 'ajax_get_template' ) );
+                add_action( 'wp_ajax_readinizer_pro_save_assignment', array( $this, 'ajax_save_assignment' ) );
+                add_action( 'wp_ajax_readinizer_pro_use_template', array( $this, 'ajax_use_template' ) );
+        }
 
 	/**
 	 * Get available templates with REAL preview styles
@@ -256,8 +257,8 @@ class ReadinizerPro_Templates {
 	 *
 	 * @return void
 	 */
-	public function ajax_use_template() {
-		check_ajax_referer( 'readinizer_pro_template', 'nonce' );
+        public function ajax_use_template() {
+                check_ajax_referer( 'readinizer_pro_template', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( __( 'Insufficient permissions.', 'readinizer-pro' ) );
@@ -278,8 +279,39 @@ class ReadinizerPro_Templates {
 
 		update_option( 'readinizer_pro_options', $options );
 
-		wp_send_json_success( array( 'message' => __( 'Template applied successfully!', 'readinizer-pro' ) ) );
-	}
+                wp_send_json_success( array( 'message' => __( 'Template applied successfully!', 'readinizer-pro' ) ) );
+        }
+
+       /**
+        * AJAX handler for retrieving a template for editing
+        *
+        * @return void
+        */
+       public function ajax_get_template() {
+               check_ajax_referer( 'readinizer_pro_template', 'nonce' );
+
+               if ( ! current_user_can( 'manage_options' ) ) {
+                       wp_send_json_error( __( 'Insufficient permissions.', 'readinizer-pro' ) );
+               }
+
+               $template_id = sanitize_text_field( wp_unslash( $_POST['template_id'] ) );
+               $templates   = $this->get_templates();
+
+               if ( ! isset( $templates[ $template_id ] ) ) {
+                       wp_send_json_error( __( 'Template not found.', 'readinizer-pro' ) );
+               }
+
+               $template = $templates[ $template_id ];
+
+               $data = array(
+                       'name'        => isset( $template['name'] ) ? $template['name'] : '',
+                       'description' => isset( $template['description'] ) ? $template['description'] : '',
+                       'html'        => isset( $template['html'] ) ? $template['html'] : '',
+                       'css'         => isset( $template['css'] ) ? $template['css'] : '',
+               );
+
+               wp_send_json_success( $data );
+       }
 
 	/**
 	 * AJAX handler for saving templates

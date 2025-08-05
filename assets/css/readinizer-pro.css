@@ -1,4 +1,4 @@
-/* Readinizer Pro Frontend Styles */
+/* Readinizer Pro Frontend Styles - COMPLETELY FIXED */
 
 /* Base styles for all display types */
 .readinizer-display {
@@ -10,6 +10,7 @@
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
 .readinizer-icon {
@@ -22,6 +23,7 @@
     color: #666666;
     font-size: 13px;
     margin: 15px 0;
+    font-weight: 400;
 }
 
 .readinizer-minimal .readinizer-icon {
@@ -70,6 +72,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
     margin: 20px 0;
     max-width: 400px;
+    display: block;
 }
 
 .readinizer-card .card-header {
@@ -114,8 +117,6 @@
 
 /* Custom style - uses inline styles from PHP */
 .readinizer-custom {
-    padding: 8px 14px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
     font-weight: 500;
 }
 
@@ -140,25 +141,30 @@
     color: #667eea;
 }
 
-/* PROGRESS BARS STYLES */
+/* PROGRESS BARS STYLES - COMPLETELY FIXED */
 
-/* Linear Progress Bar */
+/* Linear Progress Bar - FIXED for all positions */
 .readinizer-progress-linear {
     position: fixed;
-    left: 0;
-    right: 0;
-    height: var(--progress-thickness, 4px);
-    background: rgba(255, 255, 255, 0.2);
     z-index: 9999;
     transition: opacity 0.3s ease;
+    contain: layout style paint;
 }
 
 .readinizer-progress-linear.readinizer-progress-top {
     top: 0;
+    left: 0;
+    right: 0;
+    height: var(--progress-thickness, 4px);
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .readinizer-progress-linear.readinizer-progress-bottom {
     bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--progress-thickness, 4px);
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .readinizer-progress-linear .progress-bar {
@@ -167,6 +173,21 @@
     width: 0%;
     transition: width 0.3s ease;
     position: relative;
+    border-radius: inherit;
+}
+
+.readinizer-progress-linear .progress-percentage {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--progress-color, #0073aa);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 6px;
+    border-radius: 10px;
+    pointer-events: none;
 }
 
 .readinizer-progress-linear .progress-bar::after {
@@ -178,6 +199,7 @@
     width: 20px;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
     animation: progressShimmer 2s infinite;
+    border-radius: inherit;
 }
 
 @keyframes progressShimmer {
@@ -186,7 +208,7 @@
     100% { opacity: 0; }
 }
 
-/* Circular Progress Bar */
+/* Circular Progress Bar - FIXED */
 .readinizer-progress-circular {
     position: fixed;
     width: 60px;
@@ -205,6 +227,16 @@
     bottom: 20px;
 }
 
+.readinizer-progress-circular.readinizer-progress-top {
+    top: 20px;
+    right: 20px;
+}
+
+.readinizer-progress-circular.readinizer-progress-bottom {
+    bottom: 20px;
+    right: 20px;
+}
+
 .readinizer-progress-circular .circular-progress {
     position: relative;
     width: 100%;
@@ -219,7 +251,7 @@
 
 .readinizer-progress-circular .circle-bg {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.2);
+    stroke: rgba(0, 0, 0, 0.1);
     stroke-width: 2;
 }
 
@@ -241,9 +273,17 @@
     font-size: 11px;
     font-weight: 600;
     color: var(--progress-color, #0073aa);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Floating Progress Bubble */
+/* Floating Progress Bubble - FIXED */
 .readinizer-progress-floating {
     position: fixed;
     background: var(--progress-color, #0073aa);
@@ -269,6 +309,16 @@
 .readinizer-progress-floating.readinizer-progress-floating-right {
     right: 20px;
     bottom: 20px;
+}
+
+.readinizer-progress-floating.readinizer-progress-top {
+    top: 20px;
+    right: 20px;
+}
+
+.readinizer-progress-floating.readinizer-progress-bottom {
+    bottom: 20px;
+    right: 20px;
 }
 
 .readinizer-progress-floating:hover {
@@ -332,6 +382,7 @@
     .readinizer-card {
         padding: 15px;
         margin: 15px 0;
+        max-width: 100%;
     }
 
     .readinizer-floating {
@@ -350,6 +401,14 @@
         bottom: 15px;
         font-size: 11px;
         padding: 6px 10px;
+    }
+
+    .readinizer-progress-floating.readinizer-progress-floating-left {
+        left: 15px;
+    }
+
+    .readinizer-progress-floating.readinizer-progress-floating-right {
+        right: 15px;
     }
 
     .readinizer-credit {
@@ -387,6 +446,10 @@
         margin: 10px 0;
         border-radius: 15px;
     }
+
+    .readinizer-progress-linear .progress-percentage {
+        display: none; /* Hide percentage on very small screens */
+    }
 }
 
 /* Dark theme support */
@@ -399,10 +462,6 @@
 
     .readinizer-minimal {
         color: #a0aec0;
-    }
-
-    .readinizer-custom {
-        border-color: rgba(255, 255, 255, 0.2);
     }
 
     .readinizer-card {
@@ -423,37 +482,22 @@
         color: #63b3ed;
     }
 
-    .readinizer-modern .readinizer-credit a:hover {
-        color: #63b3ed;
-    }
-
     .readinizer-progress-linear {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .readinizer-progress-circular .circle-bg {
-        stroke: rgba(0, 0, 0, 0.3);
-    }
-}
-
-/* Print styles */
-@media print {
-    .readinizer-display {
-        background: none !important;
-        color: #000 !important;
-        box-shadow: none !important;
-        border: 1px solid #ccc !important;
-        font-size: 11px !important;
+        stroke: rgba(255, 255, 255, 0.1);
     }
 
-    .readinizer-credit {
-        display: none !important;
+    .readinizer-progress-circular .percentage {
+        background: rgba(45, 55, 72, 0.9);
+        color: #e2e8f0;
     }
 
-    .readinizer-progress-linear,
-    .readinizer-progress-circular,
-    .readinizer-progress-floating {
-        display: none !important;
+    .readinizer-progress-linear .progress-percentage {
+        background: rgba(45, 55, 72, 0.9);
+        color: #e2e8f0;
     }
 }
 
@@ -490,10 +534,6 @@
         transform: none;
     }
 
-    .readinizer-display.readinizer-fadeIn {
-        animation: none;
-    }
-
     .readinizer-progress-linear .progress-bar,
     .readinizer-progress-circular .circle,
     .readinizer-progress-floating {
@@ -507,4 +547,80 @@
     .readinizer-progress-linear .progress-bar::after {
         animation: none;
     }
+
+    @keyframes floatingPulse {
+        0%, 100% { transform: translateY(0px); }
+    }
+
+    @keyframes progressShimmer {
+        0%, 100% { opacity: 0; }
+    }
+}
+
+/* Print styles */
+@media print {
+    .readinizer-display {
+        background: none !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        font-size: 11px !important;
+    }
+
+    .readinizer-credit {
+        display: none !important;
+    }
+
+    .readinizer-progress-linear,
+    .readinizer-progress-circular,
+    .readinizer-progress-floating {
+        display: none !important;
+    }
+}
+
+/* Cache compatibility fixes */
+.readinizer-display {
+    contain: layout style;
+}
+
+.readinizer-progress-linear,
+.readinizer-progress-circular,
+.readinizer-progress-floating {
+    will-change: opacity;
+}
+
+/* Performance optimizations */
+.readinizer-progress-linear .progress-bar {
+    will-change: width;
+    transform: translateZ(0); /* Force hardware acceleration */
+}
+
+.readinizer-progress-circular .circle {
+    will-change: stroke-dashoffset;
+}
+
+/* Focus states for accessibility */
+.readinizer-display:focus-within {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+.readinizer-credit a:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 1px;
+    border-radius: 2px;
+}
+
+/* Ensure proper z-index stacking */
+.readinizer-progress-linear {
+    z-index: 999999;
+}
+
+.readinizer-progress-circular,
+.readinizer-progress-floating {
+    z-index: 999998;
+}
+
+.readinizer-floating {
+    z-index: 999997;
 }

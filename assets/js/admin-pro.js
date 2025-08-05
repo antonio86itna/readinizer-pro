@@ -417,85 +417,90 @@
             window.readinizerChart.destroy();
         }
 
-        // Sample data for demo when no real data exists
-        const monthlyData = [
-            {month: 'Jan', views: 1200, engagement: 75},
-            {month: 'Feb', views: 1800, engagement: 78},
-            {month: 'Mar', views: 2100, engagement: 82},
-            {month: 'Apr', views: 1900, engagement: 79},
-            {month: 'May', views: 2500, engagement: 85},
-            {month: 'Jun', views: 2800, engagement: 88}
-        ];
-
-        window.readinizerChart = new Chart(ctx, {
-            type: 'line',
+        $.ajax({
+            url: readinizerProAdmin.ajaxurl,
+            method: 'POST',
             data: {
-                labels: monthlyData.map(item => item.month),
-                datasets: [{
-                    label: 'Views',
-                    data: monthlyData.map(item => item.views),
-                    borderColor: '#667eea',
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }, {
-                    label: 'Engagement %',
-                    data: monthlyData.map(item => item.engagement),
-                    borderColor: '#764ba2',
-                    backgroundColor: 'rgba(118, 75, 162, 0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    yAxisID: 'y1'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Monthly Reading Analytics',
-                        font: {
-                            size: 16,
-                            weight: 'bold'
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: {
-                            display: true,
-                            text: 'Views'
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: 'Engagement %'
-                        },
-                        grid: {
-                            drawOnChartArea: false,
-                        },
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                }
+                action: 'readinizer_pro_get_monthly_analytics',
+                nonce: readinizerProAdmin.nonces.analytics
             }
-        });
+        }).done(function(response) {
+            if (!response.success || !Array.isArray(response.data)) {
+                return;
+            }
 
-        // Animate numbers
-        animateNumbers();
+            const monthlyData = response.data;
+
+            window.readinizerChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: monthlyData.map(item => item.month),
+                    datasets: [{
+                        label: 'Views',
+                        data: monthlyData.map(item => item.views),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Engagement %',
+                        data: monthlyData.map(item => item.engagement),
+                        borderColor: '#764ba2',
+                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Reading Analytics',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Views'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Engagement %'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+
+            // Animate numbers
+            animateNumbers();
+        });
     }
 
     function animateNumbers() {

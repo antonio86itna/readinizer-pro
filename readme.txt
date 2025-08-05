@@ -4,7 +4,7 @@ Tags: reading time, word count, analytics, progress bar, statistics, engagement
 Requires at least: 5.6
 Tested up to: 6.8
 Requires PHP: 8.0
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Complete professional reading time and analytics plugin for WordPress with advan
 
 **Developed by [WPezo](https://www.wpezo.com)** - Your trusted WordPress development partner.
 
-### ✨ All Features Included
+=== ✨ All Features Included ===
 
 * **Automatic Reading Time Calculation** - Smart algorithm calculates accurate reading times
 * **Word Count Display** - Show word counts alongside reading times  
@@ -30,46 +30,7 @@ Complete professional reading time and analytics plugin for WordPress with advan
 * **Page Builder Compatible** - Works seamlessly with Elementor, Gutenberg, Divi, and others
 * **Responsive Design** - Perfect display on all devices and screen sizes
 * **Dark Mode Support** - Automatic adaptation to dark themes
-
-### 🚀 Professional Features
-
-#### 📊 Advanced Analytics Dashboard
-* **Comprehensive Reading Statistics** - Track views, completion rates, and engagement metrics
-* **Top Performing Content** - Identify your most engaging posts and pages
-* **Monthly Trend Analysis** - Visualize reading patterns with interactive charts
-* **Content Performance Insights** - Understand what keeps readers engaged
-* **CSV Export** - Download your analytics data for external analysis
-
-#### 🎨 Custom Template Builder
-* **Visual Template Builder** - Create custom designs with live preview
-* **Post Type Assignments** - Assign specific templates to different content types
-* **HTML/CSS Editor** - Full control over template structure and styling
-* **Template Library** - Pre-built professional templates ready to use
-* **Import/Export** - Share templates between sites
-
-#### 📈 Reading Progress Bars
-* **Multiple Progress Styles** - Linear, circular, and floating progress indicators
-* **Customizable Positioning** - Top, bottom, or floating placement options
-* **Color & Animation Control** - Match your brand with custom colors and animations
-* **Engagement Tracking** - Track how far users scroll through your content
-* **Smart Completion Detection** - Celebrate when readers finish your content
-
-### 🎨 Display Styles
-
-Choose from professionally designed display styles:
-
-* **Minimal** - Clean, simple text display
-* **Modern** - Stylish gradients with shadows and hover effects
-* **Badge** - Compact, pill-shaped indicators
-* **Card Pro** - Full cards with detailed reading statistics
-* **Floating Pro** - Elegant floating bubbles with real-time progress
-* **Custom** - Complete control over colors, fonts, and styling
-
-### 🌟 About WPezo
-
-[WPezo](https://www.wpezo.com) is a leading WordPress development company specializing in creating exceptional plugins and themes.
-
-Visit [WPezo.com](https://www.wpezo.com) to discover our complete range of WordPress products and services!
+* **Cache Compatible** - Optimized for WP Rocket and all caching plugins
 
 == Installation ==
 
@@ -82,56 +43,19 @@ Visit [WPezo.com](https://www.wpezo.com) to discover our complete range of WordP
 7. Configure reading progress bars in the Progress Bars section
 8. That's it! Your professional reading analytics are now active
 
-== Frequently Asked Questions ==
-
-= How does Readinizer Pro calculate reading time? =
-
-Reading time is calculated using advanced algorithms that count words in your content (excluding HTML tags and shortcodes) and divide by the average reading speed. The default is 200 words per minute, but you can adjust this based on your audience.
-
-= What analytics data does Readinizer Pro collect? =
-
-Readinizer Pro tracks reading engagement metrics including:
-- Post views and reading completion rates
-- Time spent reading content
-- Scroll depth and engagement patterns
-- Popular content performance
-- Monthly trend analysis
-
-All data is stored locally in your WordPress database.
-
-= Can I customize the appearance of reading indicators? =
-
-Absolutely! Readinizer Pro offers multiple customization options:
-- 5+ pre-designed display styles
-- Custom template builder with HTML/CSS editor
-- Color and typography controls
-- Position and animation settings
-- Post type specific templates
-
-= Is Readinizer Pro compatible with page builders? =
-
-Yes! Readinizer Pro works seamlessly with all major page builders including:
-- Elementor and Elementor Pro
-- Gutenberg (Block Editor)
-- Divi Builder
-- Beaver Builder
-- Visual Composer
-- And many others
-
-= Can I export my analytics data? =
-
-Yes! Readinizer Pro includes a comprehensive export feature that allows you to download your reading analytics in CSV format.
-
-== Screenshots ==
-
-1. **Analytics Dashboard** - Comprehensive reading statistics and engagement metrics
-2. **Custom Template Builder** - Visual editor for creating custom reading time displays
-3. **Progress Bar Settings** - Configure reading progress indicators with live preview
-4. **Multiple Display Styles** - Professional templates for every design need
-5. **Admin Interface** - Clean, intuitive settings panel with live previews
-6. **Mobile Responsive** - Perfect display on all devices and screen sizes
-
 == Changelog ==
+
+= 2.0.1 - 2025-08-05 =
+* **FIXED**: All critical UI and functionality issues resolved
+* **FIXED**: Progress bars now work correctly in all positions
+* **FIXED**: Template library with real previews and working Use buttons
+* **FIXED**: Live preview now updates correctly for all settings
+* **FIXED**: Progress percentage calculation completely rewritten
+* **FIXED**: Display tab now shows all form fields properly
+* **IMPROVED**: JavaScript performance and compatibility
+* **IMPROVED**: CSS positioning and responsive design
+* **IMPROVED**: WP Rocket and cache plugin compatibility
+* **IMPROVED**: PHPDoc and WordPress Coding Standards compliance
 
 = 2.0.0 - 2025-08-05 =
 * **Complete Pro Release** - All features included, no upgrades needed
@@ -151,19 +75,6 @@ Yes! Readinizer Pro includes a comprehensive export feature that allows you to d
 * **UPDATED**: WordPress 6.8 compatibility
 * **UPDATED**: PHP 8.3 support and optimization
 
-== Support & Development ==
-
-**Need Help?**
-* [Professional Support](https://www.wpezo.com/support)
-* [Documentation](https://www.wpezo.com/docs/readinizer-pro)
-* [More Plugins](https://www.wpezo.com/plugins)
-
-**Connect with WPezo:**
-* Website: [WPezo.com](https://www.wpezo.com)
-* Email: hello@wpezo.com
-
 ---
 
 *Readinizer Pro is proudly developed by [WPezo](https://www.wpezo.com) - Creating exceptional WordPress experiences.*
-
-**Ready to revolutionize your content analytics?** Install Readinizer Pro today!

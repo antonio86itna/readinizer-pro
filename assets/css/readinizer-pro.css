@@ -1,0 +1,510 @@
+/* Readinizer Pro Frontend Styles */
+
+/* Base styles for all display types */
+.readinizer-display {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 20px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.readinizer-icon {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+/* Minimal style */
+.readinizer-minimal {
+    color: #666666;
+    font-size: 13px;
+    margin: 15px 0;
+}
+
+.readinizer-minimal .readinizer-icon {
+    display: none;
+}
+
+/* Modern style (default) */
+.readinizer-modern {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #495057;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border-left: 3px solid #007cba;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-weight: 500;
+}
+
+.readinizer-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge style */
+.readinizer-badge {
+    background: #007cba;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(0, 124, 186, 0.3);
+}
+
+.readinizer-badge .readinizer-icon {
+    font-size: 14px;
+}
+
+/* PRO STYLES - Card */
+.readinizer-card {
+    border: 1px solid #e1e5e9;
+    border-radius: 12px;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    margin: 20px 0;
+    max-width: 400px;
+}
+
+.readinizer-card .card-header {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.readinizer-card .card-body {
+    color: #666;
+    font-size: 14px;
+}
+
+/* PRO STYLES - Floating */
+.readinizer-floating {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 123, 186, 0.9);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 123, 186, 0.3);
+    animation: floatingPulse 2s ease-in-out infinite alternate;
+}
+
+.readinizer-floating .floating-text {
+    margin-left: 8px;
+}
+
+@keyframes floatingPulse {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-5px); }
+}
+
+/* Custom style - uses inline styles from PHP */
+.readinizer-custom {
+    padding: 8px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+}
+
+/* WPezo credit styling */
+.readinizer-credit {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-left: 8px;
+    font-style: italic;
+}
+
+.readinizer-credit a {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.readinizer-credit a:hover {
+    opacity: 1;
+    text-decoration: underline;
+    color: #667eea;
+}
+
+/* PROGRESS BARS STYLES */
+
+/* Linear Progress Bar */
+.readinizer-progress-linear {
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: var(--progress-thickness, 4px);
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+.readinizer-progress-linear.readinizer-progress-top {
+    top: 0;
+}
+
+.readinizer-progress-linear.readinizer-progress-bottom {
+    bottom: 0;
+}
+
+.readinizer-progress-linear .progress-bar {
+    height: 100%;
+    background: var(--progress-color, #0073aa);
+    width: 0%;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.readinizer-progress-linear .progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+    animation: progressShimmer 2s infinite;
+}
+
+@keyframes progressShimmer {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Circular Progress Bar */
+.readinizer-progress-circular {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+.readinizer-progress-circular.readinizer-progress-floating-left {
+    left: 20px;
+    bottom: 20px;
+}
+
+.readinizer-progress-circular.readinizer-progress-floating-right {
+    right: 20px;
+    bottom: 20px;
+}
+
+.readinizer-progress-circular .circular-progress {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.readinizer-progress-circular .circular-chart {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.readinizer-progress-circular .circle-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 2;
+}
+
+.readinizer-progress-circular .circle {
+    fill: none;
+    stroke: var(--progress-color, #0073aa);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 100, 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.readinizer-progress-circular .percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--progress-color, #0073aa);
+}
+
+/* Floating Progress Bubble */
+.readinizer-progress-floating {
+    position: fixed;
+    background: var(--progress-color, #0073aa);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.readinizer-progress-floating.readinizer-progress-floating-left {
+    left: 20px;
+    bottom: 20px;
+}
+
+.readinizer-progress-floating.readinizer-progress-floating-right {
+    right: 20px;
+    bottom: 20px;
+}
+
+.readinizer-progress-floating:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.readinizer-progress-floating .progress-icon {
+    font-size: 14px;
+}
+
+.readinizer-progress-floating .time-remaining {
+    font-size: 10px;
+    opacity: 0.8;
+    margin-left: 4px;
+}
+
+/* Progress animations */
+.readinizer-progress-smooth .progress-bar,
+.readinizer-progress-smooth .circle {
+    transition-timing-function: ease-out;
+}
+
+.readinizer-progress-stepped .progress-bar,
+.readinizer-progress-stepped .circle {
+    transition-timing-function: steps(10);
+}
+
+.readinizer-progress-bouncy .progress-bar,
+.readinizer-progress-bouncy .circle {
+    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.readinizer-progress-none .progress-bar,
+.readinizer-progress-none .circle {
+    transition: none;
+}
+
+/* Hide progress when complete */
+.readinizer-progress-complete.hide-when-complete {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .readinizer-display {
+        font-size: 13px;
+        margin: 15px 0;
+    }
+
+    .readinizer-modern {
+        padding: 8px 12px;
+    }
+
+    .readinizer-badge {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .readinizer-card {
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    .readinizer-floating {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .readinizer-progress-circular {
+        width: 50px;
+        height: 50px;
+    }
+
+    .readinizer-progress-floating {
+        bottom: 15px;
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    .readinizer-credit {
+        font-size: 0.75em;
+        margin-left: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .readinizer-display {
+        font-size: 12px;
+        display: block;
+        text-align: center;
+    }
+
+    .readinizer-icon {
+        margin-right: 4px;
+    }
+
+    .readinizer-credit {
+        display: block;
+        margin-top: 5px;
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .readinizer-card {
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .readinizer-floating {
+        position: static;
+        display: inline-block;
+        margin: 10px 0;
+        border-radius: 15px;
+    }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+    .readinizer-modern {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        color: #e2e8f0;
+        border-left-color: #63b3ed;
+    }
+
+    .readinizer-minimal {
+        color: #a0aec0;
+    }
+
+    .readinizer-custom {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .readinizer-card {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+
+    .readinizer-card .card-header {
+        color: #e2e8f0;
+    }
+
+    .readinizer-card .card-body {
+        color: #a0aec0;
+    }
+
+    .readinizer-credit a:hover {
+        color: #63b3ed;
+    }
+
+    .readinizer-modern .readinizer-credit a:hover {
+        color: #63b3ed;
+    }
+
+    .readinizer-progress-linear {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .readinizer-progress-circular .circle-bg {
+        stroke: rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Print styles */
+@media print {
+    .readinizer-display {
+        background: none !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        font-size: 11px !important;
+    }
+
+    .readinizer-credit {
+        display: none !important;
+    }
+
+    .readinizer-progress-linear,
+    .readinizer-progress-circular,
+    .readinizer-progress-floating {
+        display: none !important;
+    }
+}
+
+/* High contrast accessibility */
+@media (prefers-contrast: high) {
+    .readinizer-display {
+        border: 2px solid;
+        font-weight: bold;
+    }
+
+    .readinizer-modern {
+        background: white;
+        color: black;
+        border-color: black;
+    }
+
+    .readinizer-badge {
+        background: black;
+        color: white;
+    }
+
+    .readinizer-credit a {
+        font-weight: bold;
+    }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .readinizer-display {
+        transition: none;
+    }
+
+    .readinizer-modern:hover {
+        transform: none;
+    }
+
+    .readinizer-display.readinizer-fadeIn {
+        animation: none;
+    }
+
+    .readinizer-progress-linear .progress-bar,
+    .readinizer-progress-circular .circle,
+    .readinizer-progress-floating {
+        transition: none;
+    }
+
+    .readinizer-floating {
+        animation: none;
+    }
+
+    .readinizer-progress-linear .progress-bar::after {
+        animation: none;
+    }
+}

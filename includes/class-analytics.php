@@ -31,8 +31,8 @@ class ReadinizerPro_Analytics {
 	 *
 	 * @return void
 	 */
-	public function create_tables() {
-		global $wpdb;
+        public function create_tables() {
+                global $wpdb;
 
 		$table_name = $wpdb->prefix . 'readinizer_analytics';
 
@@ -60,8 +60,73 @@ class ReadinizerPro_Analytics {
 		) $charset_collate;";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $sql );
-	}
+                dbDelta( $sql );
+        }
+
+       /**
+        * Track basic reading stats
+        *
+        * @param int $post_id Post ID.
+        * @param int $word_count Total words in the post.
+        * @param int $reading_time_minutes Estimated reading time in minutes.
+        * @return void
+        */
+       public function track_reading_stats( $post_id, $word_count, $reading_time_minutes ) {
+               global $wpdb;
+
+               $post_id             = intval( $post_id );
+               $word_count          = intval( $word_count );
+               $reading_time_minutes = intval( $reading_time_minutes );
+
+               if ( $post_id <= 0 ) {
+                       return;
+               }
+
+               $user_id    = get_current_user_id();
+               $session_id = $this->get_session_id();
+               $ip_address = $this->get_client_ip();
+               $user_agent = sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ?? '' );
+
+               $table_name = $wpdb->prefix . 'readinizer_analytics';
+
+               // Check for an existing record for this session and post today.
+               $existing = $wpdb->get_var(
+                       $wpdb->prepare(
+                               "SELECT id FROM $table_name WHERE post_id = %d AND session_id = %s AND DATE(created_at) = CURDATE() ORDER BY created_at DESC LIMIT 1",
+                               $post_id,
+                               $session_id
+                       )
+               );
+
+               if ( $existing ) {
+                       $wpdb->update(
+                               $table_name,
+                               array(
+                                       'total_words'    => $word_count,
+                                       'estimated_time' => $reading_time_minutes,
+                                       'updated_at'     => current_time( 'mysql' ),
+                               ),
+                               array( 'id' => $existing ),
+                               array( '%d', '%d', '%s' ),
+                               array( '%d' )
+                       );
+               } else {
+                       $wpdb->insert(
+                               $table_name,
+                               array(
+                                       'post_id'        => $post_id,
+                                       'user_id'        => $user_id ?: null,
+                                       'total_words'    => $word_count,
+                                       'estimated_time' => $reading_time_minutes,
+                                       'session_id'     => $session_id,
+                                       'ip_address'     => $ip_address,
+                                       'user_agent'     => $user_agent,
+                                       'created_at'     => current_time( 'mysql' ),
+                               ),
+                               array( '%d', '%d', '%d', '%d', '%s', '%s', '%s', '%s' )
+                       );
+               }
+       }
 
 	/**
 	 * Track reading engagement via AJAX
